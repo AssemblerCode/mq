@@ -19,17 +19,18 @@ public class RabbitmqTopicConfiguration {
         return new TopicExchange("topic_order_exchange", true, false);
     }
 
+    @Bean(name = "getSmsQueue")
     public Queue getSmsQueue() {
         Map<String,Object> param=new HashMap<>();
-        param.put("x-message-ttl",5000);
-        Queue sms_queue = new Queue("email_queue", true,false,false,param);
+        param.put("x-message-ttl",10000);
+        Queue sms_queue = new Queue("sms_queue", true,false,false,param);
         return sms_queue;
     }
 
     @Bean(name = "getEmailQueue")
     public Queue getEmailQueue() {
         Map<String,Object> param=new HashMap<>();
-        param.put("x-message-ttl",5000);
+        param.put("x-message-ttl",10000);
         Queue email_queue  = new Queue("email_queue", true,false,false,param);
         return email_queue;
     }

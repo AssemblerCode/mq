@@ -15,8 +15,20 @@ public class ProducerController {
     ProducerService ps;
 
     @PostMapping("/makeOrderByTopic")
-    public String makeOrderByTopic(String routeKey){
+    public String makeOrderByTopic(String routeKey) throws InterruptedException {
         ps.makeOrderByTopic(routeKey);
+        return "code:200";
+    }
+
+    @PostMapping("/ttlOrderByDirect")
+    public String ttlOrderByDirect(String routeKey) throws InterruptedException {
+        ps.ttlOrderByDirect(routeKey);
+        return "code:200";
+    }
+
+    @PostMapping("/getDeadQueue")
+    public String getDeadQueue(String routeKey) throws InterruptedException {
+        ps.getDeadQueue(routeKey);
         return "code:200";
     }
 
