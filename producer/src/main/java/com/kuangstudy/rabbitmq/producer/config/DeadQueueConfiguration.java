@@ -21,17 +21,14 @@ public class DeadQueueConfiguration {
 
     @Bean(name = "getDeadQueue")
     public Queue getDeadQueue() {
-        Map<String,Object> param=new HashMap<>();
-        param.put("x-message-ttl",10000);
-        param.put("x-dead-letter-exchange", "dead_direct_exchange");
-        param.put("x-dead-letter-routing-key", "dead");
-        Queue q = new Queue("dead_queue", true,false,false,param);
-        return  q;
+        Map<String, Object> param = new HashMap<>();
+        Queue q = new Queue("dead_queue", true, false, false, param);
+        return q;
     }
 
     @Bean(name = "getDeadBinding")
     public Binding getDeadBinding() {
-        String routeKey = "";
+        String routeKey = "dead";
         return BindingBuilder.bind(getDeadQueue()).to(getDeadExchange()).with(routeKey);
     }
 

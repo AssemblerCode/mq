@@ -1,6 +1,5 @@
 package com.kuangstudy.rabbitmq.producer.controller;
 
-
 import com.kuangstudy.rabbitmq.producer.service.ProducerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;

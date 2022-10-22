@@ -42,7 +42,7 @@ public class ProducerServiceImpl implements ProducerService {
 
         String exName = topicConfig.getTopicExchange().getName();
         String msg = UUID.randomUUID().toString();
-        for (int i=0;i<10;i++){
+        for (int i = 0; i < 10; i++) {
             rt.convertAndSend(exName, routeKey, msg);
             Thread.sleep(1000);
             log.info("消息发送成功");
@@ -56,25 +56,27 @@ public class ProducerServiceImpl implements ProducerService {
         String exName = directConfig.getDirectExchange().getName();
         String msg = UUID.randomUUID().toString();
 
-        MessagePostProcessor mpp=new MessagePostProcessor() {
+        MessagePostProcessor mpp = new MessagePostProcessor() {
             @Override
             public Message postProcessMessage(Message msg) throws AmqpException {
                 MessageProperties mp = msg.getMessageProperties();
-                mp.setExpiration("15000");
+//                mp.setExpiration("15000");
                 mp.setContentEncoding("utf-8");
                 return msg;
             }
         };
 
-        rt.convertAndSend(exName, routeKey, msg,mpp );
+        rt.convertAndSend(exName, routeKey, msg, mpp);
         log.info("消息发送成功");
     }
 
     @Override
     public void getDeadQueue(String routeKey) {
-        Binding deadBinding = deadQueueConfig.getDeadBinding();
+       /*
+       Binding deadBinding = deadQueueConfig.getDeadBinding();
         String exName = deadBinding.getExchange();
-        rt.convertAndSend(exName, routeKey  );
+        rt.convertAndSend(exName, routeKey);
+        */
 
     }
 }
