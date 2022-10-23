@@ -3,6 +3,8 @@ package com.kuangstudy.rabbitmq.producer.service.impl;
 import com.kuangstudy.rabbitmq.producer.config.DeadQueueConfiguration;
 import com.kuangstudy.rabbitmq.producer.config.RabbitmqTopicConfiguration;
 import com.kuangstudy.rabbitmq.producer.config.TtlDirectConfiguration;
+import com.kuangstudy.rabbitmq.producer.confirm.MsgConfirmCallBack;
+import com.kuangstudy.rabbitmq.producer.confirm.MsgReturnCallBack;
 import com.kuangstudy.rabbitmq.producer.service.ProducerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +22,7 @@ import java.util.UUID;
 
 
 @Service
-public class ProducerServiceImpl implements ProducerService {
+public class ProducerServiceImpl implements ProducerService   {
     @Resource(name = "rabbitmqTopicConfiguration")
     private RabbitmqTopicConfiguration topicConfig;
 
@@ -35,6 +37,12 @@ public class ProducerServiceImpl implements ProducerService {
     @Autowired
     private RabbitTemplate rt;
 
+    @Autowired
+    MsgReturnCallBack mrcb;
+
+    @Autowired
+    MsgConfirmCallBack mccb;
+
     @Override
     public void makeOrderByTopic(String routeKey) throws InterruptedException {
         Binding emailBinding = topicConfig.getEmailBinding();
@@ -43,8 +51,10 @@ public class ProducerServiceImpl implements ProducerService {
         String exName = topicConfig.getTopicExchange().getName();
         String msg = UUID.randomUUID().toString();
         for (int i = 0; i < 10; i++) {
-            rt.convertAndSend(exName, routeKey, msg);
             Thread.sleep(1000);
+            rt.convertAndSend(exName, routeKey, msg);
+            rt.setConfirmCallback(mccb);
+            rt.setReturnCallback(mrcb);
             log.info("消息发送成功");
         }
     }
@@ -72,11 +82,6 @@ public class ProducerServiceImpl implements ProducerService {
 
     @Override
     public void getDeadQueue(String routeKey) {
-       /*
-       Binding deadBinding = deadQueueConfig.getDeadBinding();
-        String exName = deadBinding.getExchange();
-        rt.convertAndSend(exName, routeKey);
-        */
 
     }
 }
